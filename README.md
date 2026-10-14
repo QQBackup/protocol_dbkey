@@ -32,32 +32,6 @@ macOS 上取 NTQQ 数据库密钥（dbkey）的最小 CLI。**不需要关闭 SI
 cargo build --release
 ```
 
-## 必需的一步：给二进制签名
-
-`qqdbkey` 作为独立进程去加载 `wrapper.node`（借它的签名例程），
-在开启 SIP 的 macOS 上必须给二进制加上对应 entitlement，否则加载会被系统策略拒绝。
-
-准备一个 entitlements 文件 `ent.plist`：
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict>
-  <key>com.apple.security.cs.disable-library-validation</key><true/>
-  <key>com.apple.security.cs.allow-unsigned-executable-memory</key><true/>
-</dict></plist>
-```
-
-然后签名：
-
-```sh
-codesign --force --options runtime --sign - \
-  --entitlements ent.plist \
-  target/release/qqdbkey
-```
-
-未签名的二进制在加载签名器那一步会报 `library load disallowed by system policy`。
-
 ## 使用
 
 ```sh
