@@ -1,0 +1,46 @@
+[package]
+name = "protocol_dbkey"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "macOS: 无 SIP / 无 root，凭本地 login.db 的 a1 + 设备 guid 纯协议换取 NTQQ dbkey"
+
+[[bin]]
+name = "qqdbkey"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+crossterm = "0.27"
+
+# 纯 Rust 密码学（不引 sqlcipher / openssl）
+sha1 = "0.10"
+sha2 = "0.10"
+hmac = "0.12"
+pbkdf2 = { version = "0.12", default-features = false, features = ["hmac"] }
+aes = "0.8"
+cbc = "0.1"
+aes-gcm = "0.10"
+p256 = { version = "0.13", features = ["ecdh"] }
+md5 = "0.7"
+libc = "0.2"
+hex = "0.4"
+getrandom = "0.2"
+
+# protobuf（wtlogin / OIDB）
+prost = "0.13"
+
+# 读解密后的 login.db + WAL 合并（标准 SQLite，非 sqlcipher）
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+# wrapper.node x86-64 反汇编（Apple Silicon 走手写 aarch64）
+libloading = "0.8"
+memmap2 = "0.9"
+iced-x86 = "1.21"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true
