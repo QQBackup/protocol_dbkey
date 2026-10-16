@@ -23,8 +23,8 @@ jobs:
       matrix:
         include:
           - target: x86_64-apple-darwin
-            runner: macos-13
-            arch: intel
+            runner: macos-15-intel
+            arch: x64
           - target: aarch64-apple-darwin
             runner: macos-14
             arch: arm
